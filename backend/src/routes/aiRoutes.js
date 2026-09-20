@@ -1,0 +1,10 @@
+const express = require('express');
+const { protect } = require('../middleware/authMiddleware');
+const { projectBreakdown, freelancerMatch, taskEstimate, projectHealth, projectCopilot, handleAIError } = require('../controllers/aiController');
+const router = express.Router();
+router.post('/project-breakdown', protect, projectBreakdown, handleAIError);
+router.post('/freelancer-match/:projectId', protect, freelancerMatch, handleAIError);
+router.post('/task-estimate/:projectId', protect, taskEstimate, handleAIError);
+router.get('/project-health/:projectId', protect, projectHealth, handleAIError);
+router.post('/project-copilot/:projectId', protect, projectCopilot, handleAIError);
+module.exports = router;

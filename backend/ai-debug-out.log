@@ -1,0 +1,12 @@
+
+> workflow-ai-backend@1.0.0 start
+> node src/server.js
+
+[WorkFlow AI Server]: Running in development mode with Socket.IO on port 5000
+[MongoDB Connected]: 127.0.0.1/workflow_ai
+[AI Provider Request] provider=gemini feature=breakdown bytes=183 bodyKeys=contents,generationConfig,systemInstruction userKeys=kind,requirement contextKeys=
+[AI Provider Request] provider=gemini feature=match bytes=640 bodyKeys=contents,generationConfig,systemInstruction userKeys=freelancer,kind,project contextKeys=
+[AI Provider Request] provider=gemini feature=estimate bytes=356 bodyKeys=contents,generationConfig,systemInstruction userKeys=kind,project,task contextKeys=
+[AI Provider Request] provider=gemini feature=health bytes=1606 bodyKeys=contents,generationConfig,systemInstruction userKeys=context,kind contextKeys=members,metrics,milestones,project,tasks
+[AI Provider Request] provider=gemini feature=copilot bytes=1648 bodyKeys=contents,generationConfig,systemInstruction userKeys=context,kind,question contextKeys=members,metrics,milestones,project,tasks
+[AI Provider Request] provider=gemini feature=copilot bytes=1648 bodyKeys=contents,generationConfig,systemInstruction userKeys=context,kind,question contextKeys=members,metrics,milestones,project,tasks
