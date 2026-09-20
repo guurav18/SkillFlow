@@ -1,70 +1,114 @@
-# WorkFlow AI — "AI-powered Freelancer & Project Management Platform"
+# ✦ SkillFlow
 
-> **Phase 1: Authentication & Core Marketplace Foundation**
+### Find Talent. Build Anything.
 
-WorkFlow AI is a production-grade full-stack platform connecting high-caliber talent with innovative clients.
+SkillFlow is a full-stack freelance marketplace and project management platform that connects clients with skilled freelancers and provides an intelligent workspace to manage projects from requirements to delivery.
 
----
+Instead of being only a freelancer marketplace, SkillFlow combines:
 
-## 🏗️ Architecture & Technology Stack
-
-- **Frontend**: React 18, React Router v6, Tailwind CSS, Lucide React, Axios, Vite
-- **Backend**: Node.js, Express.js REST APIs, MongoDB, Mongoose, JWT, bcryptjs
-- **Database**: MongoDB (Mongoose ODM)
+**Talent Discovery + Hiring + Project Management + Collaboration + AI Intelligence**
 
 ---
 
-## 👥 Platform Roles & Permissions
+## 🚀 Overview
 
-| Role | Permissions & Flows |
-|---|---|
-| **Client** | Create & manage projects, browse incoming proposals, view developer credentials, hire freelancers with 1-click |
-| **Freelancer** | Discover open projects with real-time search & filters, submit customized bids/proposals, monitor application statuses, manage active contracts |
-| **Admin** | Platform metrics hub (total users, clients, freelancers, open/assigned scopes, recent activities) |
+Finding the right freelancer is only the beginning.
 
----
+Once a freelancer is hired, projects still require:
 
-## 🚀 Quick Start Guide
+- Task management
+- Milestone tracking
+- Client approvals
+- Real-time communication
+- Project monitoring
+- Invoicing
+- Notifications
+- Progress tracking
 
-### Prerequisites
-- Node.js (v18+)
-- MongoDB (Running locally on `mongodb://127.0.0.1:27017/workflow_ai` or MongoDB Atlas URI)
+SkillFlow brings these workflows into one platform.
 
-### 1. Start Backend Server
+AI works as an intelligent layer across the platform to help with:
 
-```bash
-cd backend
-npm install
-npm run seed     # Seeds Admin, Clients, Freelancers, and Sample Projects
-npm start        # Launches server on http://localhost:5000
-```
-
-### 2. Start Frontend Dev Server
-
-```bash
-cd frontend
-npm install
-npm run dev      # Launches Vite frontend on http://localhost:5173
-```
+- Project requirement breakdown
+- Freelancer matching
+- Task effort estimation
+- Project health analysis
+- Project assistance through AI Copilot
 
 ---
 
-## 🔑 Pre-Seeded Development Accounts
+## ✨ Key Features
 
-All test accounts use password: `password123`
+### 👤 Multi-Role Platform
 
-| Role | Email | Password |
-|---|---|---|
-| **Admin** | `admin@workflowai.com` | `password123` |
-| **Client** | `client@workflowai.com` | `password123` |
-| **Freelancer** | `freelancer@workflowai.com` | `password123` |
+SkillFlow supports three major roles:
+
+#### Client
+- Register / Login
+- Create projects
+- Define budget and deadline
+- Browse freelancer profiles
+- Review applications
+- Hire freelancers
+- Manage project workspace
+- Review submitted tasks
+- Approve or request changes
+- Track milestones
+- Chat with freelancers
+- View analytics
+- Manage invoices and notifications
+
+#### Freelancer
+- Register / Login
+- Create professional profile
+- Add skills and portfolio
+- Browse projects
+- Search and discover opportunities
+- Apply to projects
+- Track applications
+- Manage hired projects
+- Work through Kanban tasks
+- Submit tasks for review
+- Respond to client change requests
+- Track milestones
+- Chat with clients
+- View earnings and analytics
+
+#### Admin
+- Admin dashboard
+- User management
+- Project monitoring
+- Transaction monitoring
+- Platform analytics
+- Reports
 
 ---
 
-## 🛣️ Phase Roadmap
+# 🤖 AI-Powered Features
 
-- ✅ **PHASE 1 (Current)**: Authentication, Role-based Dashboards, Project Creation, Discovery, Application System & Hiring Engine.
-- ⏳ **PHASE 2**: Project Workspace (Tasks, Kanban Board, Milestones, Real-time Chat).
-- ⏳ **PHASE 3**: Business Layer (Payments, Invoices, Notifications, Analytics).
-- ⏳ **PHASE 4**: AI Layer (AI Requirement Breakdown, Freelancer Matching, Effort Estimation, AI Copilot).
-- ⏳ **PHASE 5**: Production Engineering (Docker, CI/CD, Production Deployment).
+SkillFlow uses AI as an intelligent layer over the core marketplace and project management system.
+
+## 1. AI Requirement Breakdown
+
+Convert project requirements into a structured development plan.
+
+The AI can generate:
+
+- Project summary
+- Required skills
+- Milestones
+- Tasks
+- Task priorities
+- Task dependencies
+- Estimated effort
+
+### Flow
+
+```text
+Project Requirement
+        ↓
+   AI Analysis
+        ↓
+Milestones + Tasks
+        ↓
+Structured Project Plan
