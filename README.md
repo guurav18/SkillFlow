@@ -112,3 +112,51 @@ Project Requirement
 Milestones + Tasks
         ↓
 Structured Project Plan
+```
+
+---
+
+## 🏗️ Production Architecture & Deployment (Phase 5)
+
+SkillFlow is designed for production deployment across separated frontend and backend services.
+
+### Environment Variables
+
+**Backend (`.env`)**
+- `PORT`: Server port (default 5000)
+- `NODE_ENV`: `development` or `production`
+- `MONGO_URI` / `MONGODB_URI`: MongoDB connection string
+- `JWT_SECRET`: Secret key for JWT signing
+- `JWT_EXPIRE`: Token expiration (e.g. `30d`)
+- `AI_PROVIDER`: `gemini` or `mock`
+- `AI_API_KEY`: API key for Gemini API
+- `CLIENT_URL` / `FRONTEND_URL`: Allowed CORS origin for production
+
+**Frontend (`.env`)**
+- `VITE_API_URL`: Backend API URL (e.g., `https://api.workflowai.com`)
+
+### Docker Setup
+
+The backend can be containerized using Docker. A `Dockerfile` and `docker-compose.yml` are provided.
+
+**Build and Run with Docker Compose:**
+```bash
+docker-compose up -d --build
+```
+
+**Manual Build:**
+```bash
+cd backend
+docker build -t workflow-ai-backend .
+docker run -p 5000:5000 --env-file .env workflow-ai-backend
+```
+
+### Vercel SPA Routing
+
+The frontend is an SPA built with React and Vite. When deploying to Vercel, direct navigation to deep links (e.g. `/freelancer/browse`) requires routing fallback. This is handled automatically by the included `vercel.json` config which rewrites all requests to `/index.html`.
+
+### Security Guidelines
+
+- Real-time features (Socket.io) strictly validate workspace membership (`assignedFreelancers` and `hiredFreelancer`).
+- Strict CORS validation replaces wildcard access in production environments.
+- High demand API errors from Gemini (`503 Service Unavailable`) are handled gracefully via Circuit Breaker to prevent cascading failures.

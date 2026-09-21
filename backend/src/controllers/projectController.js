@@ -147,7 +147,10 @@ const getMyProjects = async (req, res, next) => {
     if (req.user.role === 'client') {
       query.client = req.user._id;
     } else if (req.user.role === 'freelancer') {
-      query.hiredFreelancer = req.user._id;
+      query.$or = [
+        { hiredFreelancer: req.user._id },
+        { assignedFreelancers: req.user._id },
+      ];
     } else if (req.user.role === 'admin') {
       // Admin can see recent projects
       query = {};

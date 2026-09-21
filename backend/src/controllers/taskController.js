@@ -255,9 +255,11 @@ const updateTask = async (req, res, next) => {
       if (priority !== undefined) task.priority = priority;
       if (dueDate !== undefined) task.dueDate = dueDate ? new Date(dueDate) : null;
 
-      // Validate new assignee is a project member
       if (assignedTo !== undefined && assignedTo !== null) {
-        const projFreelancerIds = (proj.assignedFreelancers || []).map((id) => id.toString());
+        const projFreelancerIds = [
+          ...(proj.assignedFreelancers || []),
+          ...(proj.hiredFreelancer ? [proj.hiredFreelancer] : []),
+        ].map((f) => (f._id || f).toString());
         if (!projFreelancerIds.includes(assignedTo.toString())) {
           return res.status(403).json({
             success: false,

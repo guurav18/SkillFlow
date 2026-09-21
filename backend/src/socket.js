@@ -3,14 +3,22 @@ const jwt = require('jsonwebtoken');
 const User = require('./models/User');
 const Project = require('./models/Project');
 const Message = require('./models/Message');
+const { isOriginAllowed } = require('./utils/corsOptions');
 
 let io = null;
 
 const initSocket = (httpServer) => {
   io = new Server(httpServer, {
     cors: {
-      origin: '*',
-      methods: ['GET', 'POST', 'PUT', 'DELETE'],
+      origin: (origin, callback) => {
+        if (isOriginAllowed(origin)) {
+          callback(null, true);
+        } else {
+          callback(new Error(`Socket CORS blocked for origin: ${origin}`));
+        }
+      },
+      credentials: true,
+      methods: ['GET', 'POST'],
     },
   });
 
@@ -61,8 +69,10 @@ const initSocket = (httpServer) => {
         const userId = socket.user._id.toString();
         const isClient = project.client && project.client.toString() === userId;
         const isFreelancer =
-          project.hiredFreelancer &&
-          project.hiredFreelancer.toString() === userId;
+          (project.hiredFreelancer && project.hiredFreelancer.toString() === userId) ||
+          (project.assignedFreelancers || []).some(
+            (f) => (f._id || f).toString() === userId
+          );
         const isAdmin = socket.user.role === 'admin';
 
         if (!isClient && !isFreelancer && !isAdmin) {
@@ -107,8 +117,10 @@ const initSocket = (httpServer) => {
         const userId = socket.user._id.toString();
         const isClient = project.client && project.client.toString() === userId;
         const isFreelancer =
-          project.hiredFreelancer &&
-          project.hiredFreelancer.toString() === userId;
+          (project.hiredFreelancer && project.hiredFreelancer.toString() === userId) ||
+          (project.assignedFreelancers || []).some(
+            (f) => (f._id || f).toString() === userId
+          );
         const isAdmin = socket.user.role === 'admin';
 
         if (!isClient && !isFreelancer && !isAdmin) {
@@ -118,7 +130,7 @@ const initSocket = (httpServer) => {
         // Determine receiver
         let receiverId = null;
         if (isClient) {
-          receiverId = project.hiredFreelancer;
+          receiverId = project.hiredFreelancer || project.assignedFreelancers?.[0];
         } else if (isFreelancer) {
           receiverId = project.client;
         }

@@ -31,17 +31,13 @@ connectDB();
 const app = express();
 const httpServer = http.createServer(app);
 
+const { corsOptions } = require('./utils/corsOptions');
+
 // Initialize Real-Time Socket.IO
 initSocket(httpServer);
 
 // Middleware
-app.use(
-  cors({
-    origin: '*',
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-  })
-);
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

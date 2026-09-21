@@ -53,9 +53,9 @@
 .bg-slate-800, .bg-slate-800\/80, .bg-slate-800\/60, .bg-slate-800\/50 { background-color: color-mix(in srgb, var(--sf-card) 88%, #64748b 12%) !important; }
 .border-slate-800, .border-slate-800\/80, .border-slate-800\/60, .border-slate-700, .border-slate-700\/60 { border-color: var(--sf-border) !important; }
 .text-slate-100, .text-slate-200 { color: var(--sf-ink) !important; }
-.text-slate-300, .text-slate-400, .text-slate-500 { color: var(--sf-muted) !important; }
 .text-indigo-400, .text-indigo-300, .text-indigo-200 { color: var(--sf-primary) !important; }
-.bg-indigo-600, .bg-indigo-600\/15, .bg-indigo-500\/10 { background-color: var(--sf-primary) !important; }
+.bg-indigo-600 { background-color: var(--sf-primary) !important; }
+.bg-indigo-600\/15, .bg-indigo-500\/10, .bg-indigo-500\/20 { background-color: var(--sf-primary-soft) !important; }
 .border-indigo-500\/20, .border-indigo-500\/30, .border-indigo-500\/40 { border-color: color-mix(in srgb, var(--sf-primary) 36%, transparent) !important; }
 .hover\:bg-slate-800:hover, .hover\:bg-slate-700:hover { background-color: color-mix(in srgb, var(--sf-card) 86%, #64748b 14%) !important; }
 

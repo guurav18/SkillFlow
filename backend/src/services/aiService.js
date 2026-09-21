@@ -52,11 +52,41 @@ const extractJson = (content) => {
   }
 };
 
+let circuitState = { failures: 0, lastFailureTime: 0, state: 'CLOSED' };
+const CIRCUIT_THRESHOLD = 3;
+const CIRCUIT_COOLDOWN_MS = 60000;
+
+const checkCircuitBreaker = () => {
+  if (circuitState.state === 'OPEN') {
+    if (Date.now() - circuitState.lastFailureTime > CIRCUIT_COOLDOWN_MS) {
+      circuitState.state = 'HALF_OPEN';
+    } else {
+      throw new AIServiceError('AI service is temporarily unavailable (Circuit Open).', 503);
+    }
+  }
+};
+
+const recordSuccess = () => {
+  circuitState.failures = 0;
+  circuitState.state = 'CLOSED';
+};
+
+const recordFailure = () => {
+  circuitState.failures += 1;
+  circuitState.lastFailureTime = Date.now();
+  if (circuitState.failures >= CIRCUIT_THRESHOLD) {
+    circuitState.state = 'OPEN';
+  }
+};
+
 const callProvider = async (system, user) => {
   if (process.env.AI_PROVIDER === 'mock') return mockResponse(user);
   if (!process.env.AI_API_KEY || !process.env.AI_API_URL || !process.env.AI_MODEL) {
     throw new AIServiceError('AI service is not configured. Set AI_API_KEY in backend/.env.');
   }
+
+  checkCircuitBreaker();
+
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), Number(process.env.AI_TIMEOUT_MS) || 30000);
   try {
@@ -106,8 +136,11 @@ const callProvider = async (system, user) => {
             await sleep(delay);
             continue;
           }
+          recordFailure();
           throw new AIServiceError();
         }
+
+        recordSuccess();
 
         if (isGemini) {
           const generatedText = payload.candidates?.[0]?.content?.parts
@@ -119,15 +152,23 @@ const callProvider = async (system, user) => {
 
         return extractJson(payload.choices?.[0]?.message?.content);
       } catch (error) {
+        if (error instanceof AIServiceError && error.message === 'AI service is temporarily unavailable (Circuit Open).') {
+          throw error;
+        }
         if (error instanceof AIServiceError) {
           error.providerStatus = lastProviderError?.status;
           error.providerMessage = lastProviderError?.body;
           throw error;
         }
+        // Network errors or aborts
+        if (attempt === maxAttempts) {
+            recordFailure();
+        }
         throw error;
       }
     }
 
+    recordFailure();
     throw new AIServiceError();
   } catch (error) {
     if (error instanceof AIServiceError) throw error;

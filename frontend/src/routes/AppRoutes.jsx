@@ -40,8 +40,22 @@ export const AppRoutes = () => {
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/browse" element={<BrowseProjectsPage />} />
-        <Route path="/freelancer/browse" element={<BrowseProjectsPage />} />
+        <Route
+          path="/browse"
+          element={
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+              <BrowseProjectsPage />
+            </div>
+          }
+        />
+        <Route
+          path="/freelancer/browse"
+          element={
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+              <BrowseProjectsPage />
+            </div>
+          }
+        />
 
         {/* Dedicated Phase 2 Project Workspace */}
         <Route
