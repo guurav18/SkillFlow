@@ -28,7 +28,7 @@ import {
   Workflow,
 } from 'lucide-react';
 
-const HERO_VIDEO = import.meta.env.VITE_HERO_VIDEO_URL || '/hero-video.mp4';
+const HERO_VIDEO = import.meta.env.VITE_HERO_VIDEO_URL || '/7983979-hd_1920_1080_25fps.mp4';
 const categories = [
   ['AI & Machine Learning', 'Build intelligent products and automations.', BrainCircuit],
   ['Web Development', 'Ship robust digital experiences.', Code2],
