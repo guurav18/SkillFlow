@@ -3,6 +3,13 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { MainLayout } from '../layouts/MainLayout';
 import { DashboardLayout } from '../layouts/DashboardLayout';
 import { ProtectedRoute } from '../components/common/ProtectedRoute';
+import { useAuth } from '../context/AuthContext';
+
+const RoleRedirect = ({ subpath }) => {
+  const { user } = useAuth();
+  const role = user?.role || 'client';
+  return <Navigate to={`/${role}/${subpath}`} replace />;
+};
 
 // Public Pages
 import { LandingPage } from '../pages/public/LandingPage';
@@ -77,6 +84,32 @@ export const AppRoutes = () => {
               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 <WorkflowPage />
               </div>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Global Shortcuts for Authenticated Users */}
+        <Route
+          path="/notifications"
+          element={
+            <ProtectedRoute allowedRoles={['client', 'freelancer', 'admin']}>
+              <RoleRedirect subpath="notifications" />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/invoices"
+          element={
+            <ProtectedRoute allowedRoles={['client', 'freelancer', 'admin']}>
+              <RoleRedirect subpath="invoices" />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/analytics"
+          element={
+            <ProtectedRoute allowedRoles={['client', 'freelancer', 'admin']}>
+              <RoleRedirect subpath="analytics" />
             </ProtectedRoute>
           }
         />
