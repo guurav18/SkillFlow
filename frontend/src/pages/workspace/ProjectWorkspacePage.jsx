@@ -501,7 +501,10 @@ export const ProjectWorkspacePage = () => {
         <TaskModal
           key={editingTask ? `edit-${editingTask._id}` : `create-${taskModalDefaultStatus}`}
           isOpen={isTaskModalOpen}
-          onClose={() => setIsTaskModalOpen(false)}
+          onClose={() => {
+            setIsTaskModalOpen(false);
+            setEditingTask(null);
+          }}
           onSubmit={handleCreateOrEditTask}
           initialTask={editingTask}
           loading={taskModalLoading}

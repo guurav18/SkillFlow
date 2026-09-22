@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Modal } from '../common/Modal';
 import { Button } from '../common/Button';
 import { Calendar, Tag, AlertCircle, Users, UserCheck, Sparkles } from 'lucide-react';
@@ -153,6 +153,7 @@ export const TaskModal = ({
           <input
             type="text"
             required
+            autoFocus
             placeholder="e.g. Implement user authentication endpoints"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
