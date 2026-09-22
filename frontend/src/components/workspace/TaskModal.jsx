@@ -4,15 +4,18 @@ import { Button } from '../common/Button';
 import { Calendar, Tag, AlertCircle, Users, UserCheck, Sparkles } from 'lucide-react';
 import { aiService } from '../../services/aiService';
 
+const EMPTY_FREELANCERS = [];
+
 export const TaskModal = ({
   isOpen,
   onClose,
   onSubmit,
   initialTask = null,
   loading,
-  projectFreelancers = [],  // Array of { _id, name, email } hired for this project
+  projectFreelancers = EMPTY_FREELANCERS,  // Array of { _id, name, email } hired for this project
   isClient = false,
   projectId = null,
+  defaultStatus = 'todo',
 }) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -25,11 +28,13 @@ export const TaskModal = ({
   const [estimateLoading, setEstimateLoading] = useState(false);
 
   useEffect(() => {
+    if (!isOpen) return;
+
     if (initialTask) {
       setTitle(initialTask.title || '');
       setDescription(initialTask.description || '');
       setPriority(initialTask.priority || 'medium');
-      setStatus(initialTask.status || 'todo');
+      setStatus(initialTask.status || defaultStatus || 'todo');
       setDueDate(
         initialTask.dueDate ? new Date(initialTask.dueDate).toISOString().split('T')[0] : ''
       );
@@ -39,14 +44,14 @@ export const TaskModal = ({
       setTitle('');
       setDescription('');
       setPriority('medium');
-      setStatus('todo');
+      setStatus(defaultStatus || 'todo');
       setDueDate('');
       // Auto-select if only one freelancer available
       setAssignedTo(projectFreelancers.length === 1 ? projectFreelancers[0]._id : '');
     }
     setError('');
     setEstimate(null);
-  }, [initialTask, isOpen, projectFreelancers]);
+  }, [initialTask, isOpen, defaultStatus]);
 
   const estimateEffort = async () => {
     if (!projectId || !title.trim()) {

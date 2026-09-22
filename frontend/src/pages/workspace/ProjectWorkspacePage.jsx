@@ -287,6 +287,11 @@ export const ProjectWorkspacePage = () => {
   const isFreelancer =
     project.hiredFreelancer?._id === user?._id ||
     project.hiredFreelancer === user?._id;
+  const projectFreelancers = project?.hiredFreelancers?.length
+    ? project.hiredFreelancers
+    : project?.hiredFreelancer
+    ? [project.hiredFreelancer]
+    : [];
   const completedTasks = tasks.filter((task) => task.status === 'done').length;
   const taskProgress = tasks.length ? Math.round((completedTasks / tasks.length) * 100) : 0;
   const healthLabel = taskProgress >= 70 ? 'On track' : taskProgress >= 35 ? 'Needs attention' : 'Starting well';
@@ -499,6 +504,9 @@ export const ProjectWorkspacePage = () => {
         initialTask={editingTask}
         loading={taskModalLoading}
         projectId={projectId}
+        projectFreelancers={projectFreelancers}
+        isClient={isClient}
+        defaultStatus={taskModalDefaultStatus}
       />
 
       {/* Milestone Creation / Edit Modal */}
