@@ -93,33 +93,33 @@ export const Navbar = () => {
                   <>
                     <Link
                       to="/client/dashboard"
-                      className={`px-3 py-1.5 rounded-lg transition ${
+                      className={`px-3 py-1.5 rounded-lg text-xs sm:text-sm transition ${
                         isActive('/client/dashboard')
-                          ? 'text-white bg-slate-800/80 font-semibold'
-                          : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+                          ? 'bg-[#eef2ff] text-[#3157d5] dark:bg-indigo-500/15 dark:text-indigo-300 font-semibold border border-indigo-100 dark:border-indigo-500/20'
+                          : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100/70 dark:hover:bg-slate-800/60'
                       }`}
                     >
                       Dashboard
                     </Link>
                     <Link
                       to="/client/projects"
-                      className={`px-3 py-1.5 rounded-lg transition ${
+                      className={`px-3 py-1.5 rounded-lg text-xs sm:text-sm transition ${
                         isActive('/client/projects')
-                          ? 'text-white bg-slate-800/80 font-semibold'
-                          : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+                          ? 'bg-[#eef2ff] text-[#3157d5] dark:bg-indigo-500/15 dark:text-indigo-300 font-semibold border border-indigo-100 dark:border-indigo-500/20'
+                          : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100/70 dark:hover:bg-slate-800/60'
                       }`}
                     >
                       My Projects
                     </Link>
                     <Link
                       to="/client/create-project"
-                      className={`px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 ${
+                      className={`px-3 py-1.5 rounded-lg text-xs sm:text-sm transition flex items-center gap-1.5 ${
                         isActive('/client/create-project')
-                          ? 'text-indigo-400 bg-indigo-500/10 font-semibold'
-                          : 'text-slate-400 hover:text-indigo-400 hover:bg-slate-900'
+                          ? 'bg-[#eef2ff] text-[#3157d5] dark:bg-indigo-500/15 dark:text-indigo-300 font-semibold border border-indigo-100 dark:border-indigo-500/20'
+                          : 'text-slate-600 dark:text-slate-400 hover:text-[#3157d5] hover:bg-slate-100/70 dark:hover:bg-slate-800/60'
                       }`}
                     >
-                      <PlusCircle className="w-4 h-4" />
+                      <PlusCircle className="w-3.5 h-3.5" />
                       Post Project
                     </Link>
                   </>
@@ -129,41 +129,41 @@ export const Navbar = () => {
                   <>
                     <Link
                       to="/freelancer/dashboard"
-                      className={`px-3 py-1.5 rounded-lg transition ${
+                      className={`px-3 py-1.5 rounded-lg text-xs sm:text-sm transition ${
                         isActive('/freelancer/dashboard')
-                          ? 'text-white bg-slate-800/80 font-semibold'
-                          : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+                          ? 'bg-[#eef2ff] text-[#3157d5] dark:bg-indigo-500/15 dark:text-indigo-300 font-semibold border border-indigo-100 dark:border-indigo-500/20'
+                          : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100/70 dark:hover:bg-slate-800/60'
                       }`}
                     >
                       Dashboard
                     </Link>
                     <Link
                       to="/freelancer/browse"
-                      className={`px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 ${
+                      className={`px-3 py-1.5 rounded-lg text-xs sm:text-sm transition flex items-center gap-1.5 ${
                         isActive('/freelancer/browse')
-                          ? 'text-white bg-slate-800/80 font-semibold'
-                          : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+                          ? 'bg-[#eef2ff] text-[#3157d5] dark:bg-indigo-500/15 dark:text-indigo-300 font-semibold border border-indigo-100 dark:border-indigo-500/20'
+                          : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100/70 dark:hover:bg-slate-800/60'
                       }`}
                     >
-                      <Search className="w-4 h-4" />
+                      <Search className="w-3.5 h-3.5" />
                       Browse Projects
                     </Link>
                     <Link
                       to="/freelancer/applications"
-                      className={`px-3 py-1.5 rounded-lg transition ${
+                      className={`px-3 py-1.5 rounded-lg text-xs sm:text-sm transition ${
                         isActive('/freelancer/applications')
-                          ? 'text-white bg-slate-800/80 font-semibold'
-                          : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+                          ? 'bg-[#eef2ff] text-[#3157d5] dark:bg-indigo-500/15 dark:text-indigo-300 font-semibold border border-indigo-100 dark:border-indigo-500/20'
+                          : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100/70 dark:hover:bg-slate-800/60'
                       }`}
                     >
                       My Applications
                     </Link>
                     <Link
                       to="/freelancer/projects"
-                      className={`px-3 py-1.5 rounded-lg transition ${
+                      className={`px-3 py-1.5 rounded-lg text-xs sm:text-sm transition ${
                         isActive('/freelancer/projects')
-                          ? 'text-white bg-slate-800/80 font-semibold'
-                          : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+                          ? 'bg-[#eef2ff] text-[#3157d5] dark:bg-indigo-500/15 dark:text-indigo-300 font-semibold border border-indigo-100 dark:border-indigo-500/20'
+                          : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100/70 dark:hover:bg-slate-800/60'
                       }`}
                     >
                       Active Projects
@@ -175,16 +175,16 @@ export const Navbar = () => {
                 {(isClient || isFreelancer) && (
                   <Link
                     to="/workflow"
-                    className={`relative px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 ${
+                    className={`relative px-3 py-1.5 rounded-lg text-xs sm:text-sm transition flex items-center gap-1.5 ${
                       isActive('/workflow')
-                        ? 'text-violet-300 bg-violet-500/10 font-semibold border border-violet-500/20'
-                        : 'text-slate-400 hover:text-violet-300 hover:bg-slate-900'
+                        ? 'text-violet-700 dark:text-violet-300 bg-violet-50 dark:bg-violet-500/15 font-semibold border border-violet-200 dark:border-violet-500/20'
+                        : 'text-slate-600 dark:text-slate-400 hover:text-violet-700 dark:hover:text-violet-300 hover:bg-slate-100/70 dark:hover:bg-slate-800/60'
                     }`}
                   >
-                    <GitPullRequestArrow className="w-4 h-4" />
-                    Workflow
+                    <GitPullRequestArrow className="w-3.5 h-3.5" />
+                    <span>Workflow</span>
                     {workflowCount > 0 && (
-                      <span className="ml-1 inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-full bg-violet-600 text-white text-[10px] font-bold shadow shadow-violet-500/40 animate-pulse">
+                      <span className="ml-1 inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-full bg-violet-600 text-white text-[10px] font-bold shadow-xs">
                         {workflowCount > 99 ? '99+' : workflowCount}
                       </span>
                     )}
@@ -194,13 +194,13 @@ export const Navbar = () => {
                 {isAdmin && (
                   <Link
                     to="/admin/dashboard"
-                    className={`px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 ${
+                    className={`px-3 py-1.5 rounded-lg text-xs sm:text-sm transition flex items-center gap-1.5 ${
                       isActive('/admin/dashboard')
-                        ? 'text-white bg-slate-800/80 font-semibold'
-                        : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+                        ? 'bg-amber-50 text-amber-700 dark:bg-amber-500/15 dark:text-amber-300 font-semibold border border-amber-200 dark:border-amber-500/20'
+                        : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100/70 dark:hover:bg-slate-800/60'
                     }`}
                   >
-                    <ShieldAlert className="w-4 h-4 text-amber-400" />
+                    <ShieldAlert className="w-3.5 h-3.5 text-amber-500" />
                     Admin Overview
                   </Link>
                 )}
@@ -210,35 +210,35 @@ export const Navbar = () => {
 
           {/* Right actions */}
           <div className="hidden items-center gap-2 md:flex">
-            <button type="button" onClick={toggleTheme} className="rounded-lg p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-900" aria-label="Toggle theme" title="Toggle theme">
+            <button type="button" onClick={toggleTheme} className="rounded-lg p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-800 dark:hover:text-white" aria-label="Toggle theme" title="Toggle theme">
               {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             </button>
             {isAuthenticated ? (
               <div className="flex items-center gap-3">
                 <NotificationBell />
                 {/* User tag */}
-                <div className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800">
-                  <div className="w-7 h-7 rounded-lg bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-xs font-bold text-indigo-400">
+                <div className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-[var(--sf-card)] border border-[var(--sf-border)] shadow-2xs">
+                  <div className="w-7 h-7 rounded-lg bg-[#eef2ff] dark:bg-indigo-600/20 border border-indigo-100 dark:border-indigo-500/30 flex items-center justify-center text-xs font-bold text-[#3157d5] dark:text-indigo-400">
                     {user?.name?.[0]?.toUpperCase() || 'U'}
                   </div>
                   <div className="flex flex-col text-left">
-                    <span className="text-xs font-semibold text-slate-200 leading-tight">
+                    <span className="text-xs font-semibold text-[var(--sf-ink)] leading-tight">
                       {user?.name}
                     </span>
-                    <span className="text-[10px] text-indigo-400 font-medium capitalize">
+                    <span className="text-[10px] text-[#3157d5] dark:text-indigo-400 font-medium capitalize">
                       {user?.role}
                     </span>
                   </div>
                 </div>
 
-                <Button variant="ghost" size="sm" onClick={handleLogout} className="text-slate-400 hover:text-rose-400">
+                <Button variant="ghost" size="sm" onClick={handleLogout} className="text-slate-400 hover:text-rose-500">
                   <LogOut className="w-4 h-4" />
                 </Button>
               </div>
             ) : (
               <div className="flex items-center gap-2">
                 <Link to="/login">
-                  <span className="px-3 py-2 text-sm font-semibold text-slate-700">Log in</span>
+                  <span className="px-3 py-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Log in</span>
                 </Link>
                 <Link to="/register">
                   <Button variant="primary" size="sm">Get Started</Button>
@@ -252,7 +252,7 @@ export const Navbar = () => {
             <button type="button" onClick={toggleTheme} className="rounded-lg p-2 text-slate-500" aria-label="Toggle theme">{isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}</button>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800"
+              className="p-2 text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
@@ -262,13 +262,13 @@ export const Navbar = () => {
 
       {/* Mobile Menu dropdown */}
       {mobileMenuOpen && (
-        <div className="md:hidden space-y-3 border-b bg-white p-4 shadow-lg">
+        <div className="md:hidden space-y-3 border-b border-[var(--sf-border)] bg-[var(--sf-card)] p-4 shadow-lg text-[var(--sf-ink)]">
           {isAuthenticated ? (
             <>
-              <div className="pb-3 border-b border-slate-800 flex items-center justify-between">
+              <div className="pb-3 border-b border-[var(--sf-border)] flex items-center justify-between">
                 <div>
-                  <p className="font-semibold text-sm text-white">{user?.name}</p>
-                  <p className="text-xs text-indigo-400 capitalize">{user?.role}</p>
+                  <p className="font-semibold text-sm text-[var(--sf-ink)]">{user?.name}</p>
+                  <p className="text-xs text-[#3157d5] dark:text-indigo-400 capitalize font-medium">{user?.role}</p>
                 </div>
                 <Button variant="danger" size="sm" onClick={handleLogout}>
                   Logout
@@ -281,21 +281,21 @@ export const Navbar = () => {
                     <Link
                       to="/client/dashboard"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="block px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-800"
+                      className="block px-3 py-2 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
                     >
                       Dashboard
                     </Link>
                     <Link
                       to="/client/projects"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="block px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-800"
+                      className="block px-3 py-2 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
                     >
                       My Projects
                     </Link>
                     <Link
                       to="/client/create-project"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="block px-3 py-2 rounded-lg text-indigo-400 hover:bg-slate-800"
+                      className="block px-3 py-2 rounded-lg text-[#3157d5] dark:text-indigo-400 font-semibold hover:bg-slate-100 dark:hover:bg-slate-800"
                     >
                       Post Project
                     </Link>
@@ -307,28 +307,28 @@ export const Navbar = () => {
                     <Link
                       to="/freelancer/dashboard"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="block px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-800"
+                      className="block px-3 py-2 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
                     >
                       Dashboard
                     </Link>
                     <Link
                       to="/freelancer/browse"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="block px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-800"
+                      className="block px-3 py-2 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
                     >
                       Browse Projects
                     </Link>
                     <Link
                       to="/freelancer/applications"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="block px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-800"
+                      className="block px-3 py-2 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
                     >
                       My Applications
                     </Link>
                     <Link
                       to="/freelancer/projects"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="block px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-800"
+                      className="block px-3 py-2 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
                     >
                       Active Projects
                     </Link>
@@ -340,7 +340,7 @@ export const Navbar = () => {
                   <Link
                     to="/workflow"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center justify-between px-3 py-2 rounded-lg text-violet-300 hover:bg-slate-800"
+                    className="flex items-center justify-between px-3 py-2 rounded-lg text-violet-700 dark:text-violet-300 hover:bg-slate-100 dark:hover:bg-slate-800"
                   >
                     <span className="flex items-center gap-2">
                       <GitPullRequestArrow className="w-4 h-4" />
@@ -358,7 +358,7 @@ export const Navbar = () => {
                   <Link
                     to="/admin/dashboard"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block px-3 py-2 rounded-lg text-amber-400 hover:bg-slate-800"
+                    className="block px-3 py-2 rounded-lg text-amber-600 dark:text-amber-400 hover:bg-slate-100 dark:hover:bg-slate-800"
                   >
                     Admin Dashboard
                   </Link>

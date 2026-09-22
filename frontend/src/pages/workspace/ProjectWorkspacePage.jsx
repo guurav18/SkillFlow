@@ -497,17 +497,20 @@ export const ProjectWorkspacePage = () => {
       </div>
 
       {/* Task Creation / Edit Modal */}
-      <TaskModal
-        isOpen={isTaskModalOpen}
-        onClose={() => setIsTaskModalOpen(false)}
-        onSubmit={handleCreateOrEditTask}
-        initialTask={editingTask}
-        loading={taskModalLoading}
-        projectId={projectId}
-        projectFreelancers={projectFreelancers}
-        isClient={isClient}
-        defaultStatus={taskModalDefaultStatus}
-      />
+      {isTaskModalOpen && (
+        <TaskModal
+          key={editingTask ? `edit-${editingTask._id}` : `create-${taskModalDefaultStatus}`}
+          isOpen={isTaskModalOpen}
+          onClose={() => setIsTaskModalOpen(false)}
+          onSubmit={handleCreateOrEditTask}
+          initialTask={editingTask}
+          loading={taskModalLoading}
+          projectId={projectId}
+          projectFreelancers={projectFreelancers}
+          isClient={isClient}
+          defaultStatus={taskModalDefaultStatus}
+        />
+      )}
 
       {/* Milestone Creation / Edit Modal */}
       <MilestoneModal

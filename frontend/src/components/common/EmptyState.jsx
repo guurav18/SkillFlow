@@ -12,15 +12,15 @@ export const EmptyState = ({
 }) => {
   return (
     <div
-      className={`flex flex-col items-center justify-center p-12 text-center rounded-2xl border border-dashed border-slate-800 bg-slate-900/30 ${className}`}
+      className={`flex flex-col items-center justify-center p-10 sm:p-12 text-center rounded-2xl border border-dashed border-[var(--sf-border)] bg-[var(--sf-surface)]/50 shadow-xs ${className}`}
     >
-      <div className="w-14 h-14 rounded-2xl bg-slate-800/80 border border-slate-700/60 flex items-center justify-center text-slate-400 mb-4 shadow-inner">
-        <Icon className="w-7 h-7 text-indigo-400" />
+      <div className="w-13 h-13 rounded-2xl bg-[#eef2ff] dark:bg-indigo-500/10 border border-indigo-100 dark:border-indigo-500/20 flex items-center justify-center text-[#3157d5] dark:text-indigo-400 mb-4 shadow-xs">
+        <Icon className="w-6 h-6" />
       </div>
-      <h3 className="text-base font-semibold text-slate-200 mb-1">{title}</h3>
-      <p className="text-sm text-slate-400 max-w-sm mb-6">{description}</p>
+      <h3 className="text-base font-bold text-[var(--sf-ink)] mb-1.5">{title}</h3>
+      <p className="text-sm text-[var(--sf-muted)] max-w-sm mb-6 leading-relaxed">{description}</p>
       {actionLabel && onAction && (
-        <Button onClick={onAction} variant="primary" size="sm">
+        <Button onClick={onAction} variant="primary" size="sm" className="font-semibold shadow-xs">
           {actionLabel}
         </Button>
       )}

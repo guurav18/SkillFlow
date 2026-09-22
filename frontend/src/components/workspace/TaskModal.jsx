@@ -17,41 +17,21 @@ export const TaskModal = ({
   projectId = null,
   defaultStatus = 'todo',
 }) => {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [priority, setPriority] = useState('medium');
-  const [status, setStatus] = useState('todo');
-  const [dueDate, setDueDate] = useState('');
-  const [assignedTo, setAssignedTo] = useState('');
+  const [title, setTitle] = useState(() => initialTask?.title || '');
+  const [description, setDescription] = useState(() => initialTask?.description || '');
+  const [priority, setPriority] = useState(() => initialTask?.priority || 'medium');
+  const [status, setStatus] = useState(() => initialTask?.status || defaultStatus || 'todo');
+  const [dueDate, setDueDate] = useState(() =>
+    initialTask?.dueDate ? new Date(initialTask.dueDate).toISOString().split('T')[0] : ''
+  );
+  const [assignedTo, setAssignedTo] = useState(() =>
+    initialTask?.assignedTo?._id ||
+    initialTask?.assignedTo ||
+    (projectFreelancers.length === 1 ? projectFreelancers[0]._id : '')
+  );
   const [error, setError] = useState('');
   const [estimate, setEstimate] = useState(null);
   const [estimateLoading, setEstimateLoading] = useState(false);
-
-  useEffect(() => {
-    if (!isOpen) return;
-
-    if (initialTask) {
-      setTitle(initialTask.title || '');
-      setDescription(initialTask.description || '');
-      setPriority(initialTask.priority || 'medium');
-      setStatus(initialTask.status || defaultStatus || 'todo');
-      setDueDate(
-        initialTask.dueDate ? new Date(initialTask.dueDate).toISOString().split('T')[0] : ''
-      );
-      // Pre-select current assignee
-      setAssignedTo(initialTask.assignedTo?._id || initialTask.assignedTo || '');
-    } else {
-      setTitle('');
-      setDescription('');
-      setPriority('medium');
-      setStatus(defaultStatus || 'todo');
-      setDueDate('');
-      // Auto-select if only one freelancer available
-      setAssignedTo(projectFreelancers.length === 1 ? projectFreelancers[0]._id : '');
-    }
-    setError('');
-    setEstimate(null);
-  }, [initialTask, isOpen, defaultStatus]);
 
   const estimateEffort = async () => {
     if (!projectId || !title.trim()) {
