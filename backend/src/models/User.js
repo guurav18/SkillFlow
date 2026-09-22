@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
 
 const userSchema = new mongoose.Schema(
   {
@@ -60,6 +61,20 @@ const userSchema = new mongoose.Schema(
       trim: true,
       default: '',
     },
+    // Email verification fields
+    emailVerified: {
+      type: Boolean,
+      default: false,
+      index: true,
+    },
+    emailVerificationToken: {
+      type: String,
+      select: false,
+    },
+    emailVerificationExpires: {
+      type: Date,
+      select: false,
+    },
   },
   {
     timestamps: true,
@@ -79,6 +94,22 @@ userSchema.pre('save', async function (next) {
 // Compare entered password with hashed password in DB
 userSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
+};
+
+// Generate secure random verification token, store hashed version + 24h expiry
+userSchema.methods.generateVerificationToken = function () {
+  const rawToken = crypto.randomBytes(32).toString('hex');
+
+  // Hash raw token with sha256 before persisting
+  this.emailVerificationToken = crypto
+    .createHash('sha256')
+    .update(rawToken)
+    .digest('hex');
+
+  // Expiration set to 24 hours
+  this.emailVerificationExpires = new Date(Date.now() + 24 * 60 * 60 * 1000);
+
+  return rawToken;
 };
 
 module.exports = mongoose.model('User', userSchema);

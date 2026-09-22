@@ -48,10 +48,12 @@ export const AuthProvider = ({ children }) => {
     setError(null);
     try {
       const data = await authService.register(userData);
-      localStorage.setItem('workflow_token', data.token);
-      setToken(data.token);
-      setUser(data.user);
-      return data.user;
+      if (data.token) {
+        localStorage.setItem('workflow_token', data.token);
+        setToken(data.token);
+        setUser(data.user);
+      }
+      return data;
     } catch (err) {
       setError(err.message);
       throw err;

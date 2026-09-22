@@ -26,6 +26,7 @@ const seedDatabase = async () => {
       role: 'admin',
       title: 'Platform Administrator',
       bio: 'Oversees platform health, users, and marketplace integrity.',
+      emailVerified: true,
     });
     console.log('[Seed]: Created Admin -> admin@workflowai.com / password123');
 
@@ -39,6 +40,7 @@ const seedDatabase = async () => {
       company: 'Apex Innovations',
       location: 'San Francisco, CA',
       bio: 'Leading product development at Apex Innovations. Hiring talented full-stack and AI engineers.',
+      emailVerified: true,
     });
 
     const client2 = await User.create({
@@ -50,6 +52,7 @@ const seedDatabase = async () => {
       company: 'FinPulse Labs',
       location: 'New York, NY',
       bio: 'Building next-generation real-time financial tracking and algorithmic dashboard tools.',
+      emailVerified: true,
     });
     console.log('[Seed]: Created Clients -> client@workflowai.com / password123');
 
@@ -64,6 +67,7 @@ const seedDatabase = async () => {
       hourlyRate: 65,
       location: 'Austin, TX',
       bio: '7+ years building enterprise web apps, SaaS dashboards, and modern UI systems. Passionate about clean code and pixel perfection.',
+      emailVerified: true,
     });
 
     const freelancer2 = await User.create({
@@ -76,6 +80,7 @@ const seedDatabase = async () => {
       hourlyRate: 80,
       location: 'Seattle, WA',
       bio: 'Specialist in high-throughput microservices, API architecture, and modern cloud deployment.',
+      emailVerified: true,
     });
 
     const freelancer3 = await User.create({
@@ -88,6 +93,7 @@ const seedDatabase = async () => {
       hourlyRate: 55,
       location: 'Toronto, Canada',
       bio: 'Crafting intuitive digital experiences and translating complex data workflows into sleek SaaS interfaces.',
+      emailVerified: true,
     });
     console.log('[Seed]: Created Freelancers -> freelancer@workflowai.com / password123');
 

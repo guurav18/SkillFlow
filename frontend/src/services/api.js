@@ -34,7 +34,14 @@ api.interceptors.response.use(
       error.response?.data?.message ||
       error.message ||
       'An unexpected network error occurred.';
-    return Promise.reject(new Error(message));
+    const customErr = new Error(message);
+    if (error.response?.data) {
+      customErr.response = error.response;
+      customErr.data = error.response.data;
+      customErr.emailUnverified = error.response.data.emailUnverified;
+      customErr.status = error.response.status;
+    }
+    return Promise.reject(customErr);
   }
 );
 

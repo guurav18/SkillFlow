@@ -15,6 +15,7 @@ const RoleRedirect = ({ subpath }) => {
 import { LandingPage } from '../pages/public/LandingPage';
 import { LoginPage } from '../pages/public/LoginPage';
 import { RegisterPage } from '../pages/public/RegisterPage';
+import { VerifyEmailPage } from '../pages/public/VerifyEmailPage';
 
 // Client Pages
 import { ClientDashboard } from '../pages/client/ClientDashboard';
@@ -47,6 +48,7 @@ export const AppRoutes = () => {
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/verify-email/:token" element={<VerifyEmailPage />} />
         <Route
           path="/browse"
           element={
