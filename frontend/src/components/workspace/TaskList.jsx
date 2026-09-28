@@ -3,6 +3,8 @@ import { Badge } from '../common/Badge';
 import { Button } from '../common/Button';
 import { EmptyState } from '../common/EmptyState';
 import { RequestChangesModal } from './RequestChangesModal';
+import { SubmitReviewModal } from './SubmitReviewModal';
+import { TaskDetailsModal } from './TaskDetailsModal';
 import { formatDate, formatRelativeTime } from '../../utils/formatters';
 import {
   Search,
@@ -17,6 +19,9 @@ import {
   CheckCheck,
   RotateCcw,
   AlertTriangle,
+  Paperclip,
+  FileCheck2,
+  Eye,
 } from 'lucide-react';
 
 export const TaskList = ({
@@ -35,6 +40,8 @@ export const TaskList = ({
   const [selectedStatus, setSelectedStatus] = useState('all');
   const [selectedPriority, setSelectedPriority] = useState('all');
   const [selectedTaskForChanges, setSelectedTaskForChanges] = useState(null);
+  const [selectedTaskForReview, setSelectedTaskForReview] = useState(null);
+  const [selectedTaskForDetails, setSelectedTaskForDetails] = useState(null);
   const [actionLoading, setActionLoading] = useState(false);
 
   const filteredTasks = tasks.filter((task) => {
@@ -160,14 +167,59 @@ export const TaskList = ({
                 <tr key={task._id} className="hover:bg-slate-800/30 transition">
                   {/* Title & Desc */}
                   <td className="py-3.5 px-3 max-w-xs sm:max-w-md">
-                    <div className="font-semibold text-slate-100 text-sm">{task.title}</div>
-                    {task.description && (
-                      <div className="text-slate-400 text-xs line-clamp-1 mt-0.5">
-                        {task.description}
+                    <div
+                      onClick={() => setSelectedTaskForDetails(task)}
+                      className="cursor-pointer group/title"
+                    >
+                      <div className="font-semibold text-slate-100 text-sm group-hover/title:text-indigo-400 transition">
+                        {task.title}
+                      </div>
+                      {task.description && (
+                        <div className="text-slate-400 text-xs line-clamp-1 mt-0.5">
+                          {task.description}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Attachments / Deliverables Chips */}
+                    {((task.attachments && task.attachments.length > 0) ||
+                      (task.deliverables &&
+                        (task.deliverables.notes ||
+                          task.deliverables.links?.length > 0 ||
+                          task.deliverables.attachments?.length > 0))) && (
+                      <div
+                        onClick={() => setSelectedTaskForDetails(task)}
+                        className="flex items-center gap-1.5 mt-1.5 flex-wrap cursor-pointer"
+                      >
+                        {task.attachments && task.attachments.length > 0 && (
+                          <span
+                            className="inline-flex items-center gap-1 text-[10px] text-slate-400 bg-slate-800/80 px-1.5 py-0.5 rounded border border-slate-700/60 hover:border-slate-600 transition"
+                            title={`${task.attachments.length} specification file(s)`}
+                          >
+                            <Paperclip className="w-2.5 h-2.5 text-indigo-400" />
+                            <span>{task.attachments.length} files</span>
+                          </span>
+                        )}
+                        {task.deliverables &&
+                          (task.deliverables.notes ||
+                            task.deliverables.links?.length > 0 ||
+                            task.deliverables.attachments?.length > 0) && (
+                            <span
+                              className="inline-flex items-center gap-1 text-[10px] text-indigo-300 bg-indigo-500/10 px-1.5 py-0.5 rounded border border-indigo-500/30 hover:bg-indigo-500/20 transition"
+                              title="Click to view deliverables"
+                            >
+                              <FileCheck2 className="w-2.5 h-2.5 text-indigo-400" />
+                              <span>Deliverables submitted</span>
+                            </span>
+                          )}
                       </div>
                     )}
+
                     {task.changesRequested && task.reviewComment && (
-                      <div className="text-amber-300 text-[11px] mt-1 flex items-center gap-1">
+                      <div
+                        onClick={() => setSelectedTaskForDetails(task)}
+                        className="text-amber-300 text-[11px] mt-1 flex items-center gap-1 cursor-pointer"
+                      >
                         <AlertTriangle className="w-3 h-3 text-amber-400 flex-shrink-0" />
                         <span className="italic truncate">"{task.reviewComment}"</span>
                       </div>
@@ -184,15 +236,23 @@ export const TaskList = ({
                   <td className="py-3.5 px-3">
                     {task.status === 'in_progress' && (
                       <button
-                        onClick={() => onSubmitForReview(task._id)}
+                        onClick={() => setSelectedTaskForReview(task)}
+                        disabled={actionLoading}
                         className="px-2.5 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-[11px] font-semibold transition flex items-center gap-1 shadow-sm"
                       >
-                        <Send className="w-3 h-3" /> Submit Review
+                        <Send className="w-3 h-3" /> Submit Deliverables
                       </button>
                     )}
 
                     {task.status === 'review' && isClient && (
                       <div className="flex items-center gap-1.5">
+                        <button
+                          onClick={() => setSelectedTaskForDetails(task)}
+                          className="px-2 py-1 rounded-lg bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 text-[11px] font-semibold transition flex items-center gap-1"
+                          title="View Deliverables"
+                        >
+                          <Eye className="w-3 h-3" />
+                        </button>
                         <button
                           onClick={() => setSelectedTaskForChanges(task)}
                           className="px-2 py-1 rounded-lg bg-amber-600/20 hover:bg-amber-600/30 border border-amber-500/30 text-amber-300 text-[11px] font-semibold transition flex items-center gap-1"
@@ -209,13 +269,21 @@ export const TaskList = ({
                     )}
 
                     {task.status === 'review' && !isClient && (
-                      <span className="text-slate-400 text-[11px] italic">Awaiting client</span>
+                      <button
+                        onClick={() => setSelectedTaskForDetails(task)}
+                        className="text-indigo-400 hover:text-indigo-300 text-[11px] font-medium flex items-center gap-1"
+                      >
+                        <Eye className="w-3 h-3" /> Awaiting Review
+                      </button>
                     )}
 
                     {task.status === 'done' && (
-                      <span className="text-emerald-400 text-[11px] font-medium flex items-center gap-1">
+                      <button
+                        onClick={() => setSelectedTaskForDetails(task)}
+                        className="text-emerald-400 hover:text-emerald-300 text-[11px] font-medium flex items-center gap-1"
+                      >
                         <CheckCircle2 className="w-3 h-3" /> Approved
-                      </span>
+                      </button>
                     )}
 
                     {task.status === 'todo' && (
@@ -236,6 +304,13 @@ export const TaskList = ({
                   {/* Actions */}
                   <td className="py-3.5 px-3 text-right">
                     <div className="flex items-center justify-end gap-1.5">
+                      <button
+                        onClick={() => setSelectedTaskForDetails(task)}
+                        className="p-1.5 rounded-lg text-slate-400 hover:text-indigo-400 hover:bg-slate-800 transition"
+                        title="View Details"
+                      >
+                        <Eye className="w-3.5 h-3.5" />
+                      </button>
                       <button
                         onClick={() => onEditTask(task)}
                         className="p-1.5 rounded-lg text-slate-400 hover:text-indigo-400 hover:bg-slate-800 transition"
@@ -269,6 +344,50 @@ export const TaskList = ({
           task={selectedTaskForChanges}
           onSubmit={handleConfirmChanges}
           loading={actionLoading}
+        />
+      )}
+
+      {/* Submit Deliverables Modal */}
+      {selectedTaskForReview && (
+        <SubmitReviewModal
+          isOpen={!!selectedTaskForReview}
+          onClose={() => setSelectedTaskForReview(null)}
+          task={selectedTaskForReview}
+          onSubmit={async (taskId, submissionData) => {
+            setActionLoading(true);
+            try {
+              await onSubmitForReview(taskId, submissionData);
+              setSelectedTaskForReview(null);
+            } finally {
+              setActionLoading(false);
+            }
+          }}
+          loading={actionLoading}
+        />
+      )}
+
+      {/* Task Details Modal */}
+      {selectedTaskForDetails && (
+        <TaskDetailsModal
+          isOpen={!!selectedTaskForDetails}
+          onClose={() => setSelectedTaskForDetails(null)}
+          task={selectedTaskForDetails}
+          isClient={isClient}
+          isFreelancer={isFreelancer}
+          onApprove={onApproveTask}
+          onRequestChanges={(task) => {
+            setSelectedTaskForDetails(null);
+            setSelectedTaskForChanges(task);
+          }}
+          onOpenSubmitReview={(task) => {
+            setSelectedTaskForDetails(null);
+            setSelectedTaskForReview(task);
+          }}
+          onEditTask={(task) => {
+            setSelectedTaskForDetails(null);
+            onEditTask(task);
+          }}
+          actionLoading={actionLoading}
         />
       )}
     </div>

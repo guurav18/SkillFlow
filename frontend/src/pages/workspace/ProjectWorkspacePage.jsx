@@ -406,8 +406,8 @@ export const ProjectWorkspacePage = () => {
           <KanbanBoard
             tasks={tasks}
             onUpdateStatus={handleUpdateTaskStatus}
-            onSubmitForReview={async (taskId) => {
-              await taskService.submitForReview(taskId);
+            onSubmitForReview={async (taskId, submissionData) => {
+              await taskService.submitForReview(taskId, submissionData);
               const socket = getSocket();
               socket.emit('task_change', { projectId, task: { _id: taskId, status: 'review' }, action: 'submitted_review' });
               const data = await taskService.getProjectTasks(projectId);
@@ -442,8 +442,8 @@ export const ProjectWorkspacePage = () => {
           <TaskList
             tasks={tasks}
             onUpdateStatus={handleUpdateTaskStatus}
-            onSubmitForReview={async (taskId) => {
-              await taskService.submitForReview(taskId);
+            onSubmitForReview={async (taskId, submissionData) => {
+              await taskService.submitForReview(taskId, submissionData);
               const socket = getSocket();
               socket.emit('task_change', { projectId, task: { _id: taskId, status: 'review' }, action: 'submitted_review' });
               const data = await taskService.getProjectTasks(projectId);

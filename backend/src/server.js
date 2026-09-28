@@ -1,6 +1,7 @@
 const http = require('http');
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 const { initSocket } = require('./socket');
@@ -21,6 +22,8 @@ const invoiceRoutes = require('./routes/invoiceRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
 const analyticsRoutes = require('./routes/analyticsRoutes');
 const aiRoutes = require('./routes/aiRoutes');
+const freelancerRoutes = require('./routes/freelancerRoutes');
+const uploadRoutes = require('./routes/uploadRoutes');
 
 // Load environment variables
 dotenv.config();
@@ -52,11 +55,15 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+// Static upload directory serving
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+
 // Mount Routes (Phase 1 + Phase 2)
 app.use('/api/auth', authRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/applications', applicationRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/freelancers', freelancerRoutes);
 
 // Phase 2 Nested Workspace Routes
 app.use('/api/projects/:projectId/tasks', taskRoutes);
@@ -73,6 +80,7 @@ app.use('/api/invoices', invoiceRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/ai', aiRoutes);
+app.use('/api/upload', uploadRoutes);
 
 // Error handling middleware
 app.use(notFound);

@@ -7,6 +7,8 @@ import { Button } from '../../components/common/Button';
 import { LoadingSpinner } from '../../components/common/LoadingSpinner';
 import { EmptyState } from '../../components/common/EmptyState';
 import { RequestChangesModal } from '../../components/workspace/RequestChangesModal';
+import { SubmitReviewModal } from '../../components/workspace/SubmitReviewModal';
+import { TaskDetailsModal } from '../../components/workspace/TaskDetailsModal';
 import { formatDate, formatRelativeTime } from '../../utils/formatters';
 import {
   GitMerge,
@@ -23,6 +25,10 @@ import {
   Sparkles,
   User,
   Building2,
+  Paperclip,
+  FileCheck2,
+  Eye,
+  Download,
 } from 'lucide-react';
 
 export const WorkflowPage = () => {
@@ -33,6 +39,8 @@ export const WorkflowPage = () => {
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
   const [selectedTaskForChanges, setSelectedTaskForChanges] = useState(null);
+  const [selectedTaskForReview, setSelectedTaskForReview] = useState(null);
+  const [selectedTaskForDetails, setSelectedTaskForDetails] = useState(null);
   const [actionLoading, setActionLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
 
@@ -67,11 +75,12 @@ export const WorkflowPage = () => {
     }
   };
 
-  const handleSubmitReview = async (taskId) => {
+  const handleSubmitReview = async (taskId, submissionData = {}) => {
     setActionLoading(true);
     try {
-      await taskService.submitForReview(taskId);
-      setSuccessMessage('Task submitted for client review!');
+      await taskService.submitForReview(taskId, submissionData);
+      setSelectedTaskForReview(null);
+      setSuccessMessage('Task deliverables submitted for client review!');
       setTimeout(() => setSuccessMessage(''), 4000);
       await loadWorkflowData();
     } catch (err) {
@@ -343,6 +352,73 @@ export const WorkflowPage = () => {
                   </div>
                 )}
 
+                {/* Submitted Deliverables Preview Box */}
+                {task.deliverables &&
+                  (task.deliverables.notes ||
+                    task.deliverables.links?.length > 0 ||
+                    task.deliverables.attachments?.length > 0) && (
+                  <div className="p-3.5 rounded-xl bg-indigo-950/20 border border-indigo-500/30 text-xs mb-3 space-y-2">
+                    <div className="flex items-center justify-between font-bold text-indigo-300">
+                      <span className="flex items-center gap-1.5">
+                        <FileCheck2 className="w-4 h-4 text-indigo-400" />
+                        Submitted Deliverables:
+                      </span>
+                      {task.deliverables.submittedAt && (
+                        <span className="text-[11px] font-normal text-slate-400">
+                          {formatRelativeTime(task.deliverables.submittedAt)}
+                        </span>
+                      )}
+                    </div>
+
+                    {task.deliverables.notes && (
+                      <p className="text-slate-200 bg-slate-900/60 p-2.5 rounded-lg border border-slate-800 leading-relaxed">
+                        {task.deliverables.notes}
+                      </p>
+                    )}
+
+                    {/* Links */}
+                    {task.deliverables.links && task.deliverables.links.length > 0 && (
+                      <div className="flex flex-wrap gap-2 pt-0.5">
+                        {task.deliverables.links.map((link, idx) => (
+                          <a
+                            key={idx}
+                            href={link.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900 border border-indigo-500/30 text-indigo-300 hover:text-white text-xs transition"
+                          >
+                            <span>{link.label || 'View Deliverable'}</span>
+                            <ExternalLink className="w-3 h-3 text-slate-400" />
+                          </a>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Attachments */}
+                    {task.deliverables.attachments && task.deliverables.attachments.length > 0 && (
+                      <div className="flex flex-wrap gap-2 pt-1">
+                        {task.deliverables.attachments.map((file, idx) => {
+                          const fileUrl = taskService.getFileUrl(file.url);
+                          return (
+                            <a
+                              key={file._id || idx}
+                              href={fileUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              download
+                              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900/80 border border-slate-800 text-slate-300 hover:text-indigo-300 text-xs transition"
+                            >
+                              <Paperclip className="w-3 h-3 text-indigo-400" />
+                              <span className="max-w-[150px] truncate">{file.name}</span>
+                              <Download className="w-3 h-3 text-slate-500" />
+                            </a>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                )}
+
                 {/* Footer Meta info & Action Buttons */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-3 border-t border-slate-800/80 text-xs text-slate-400">
                   <div className="flex flex-wrap items-center gap-4">
@@ -372,6 +448,16 @@ export const WorkflowPage = () => {
 
                   {/* Actions */}
                   <div className="flex items-center gap-2 self-end sm:self-auto">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setSelectedTaskForDetails(task)}
+                      className="text-slate-300 hover:text-indigo-300"
+                    >
+                      <Eye className="w-3.5 h-3.5 mr-1" />
+                      View Details
+                    </Button>
+
                     {/* Client Approval / Changes Actions */}
                     {isReview && isClient && (
                       <>
@@ -404,11 +490,11 @@ export const WorkflowPage = () => {
                         variant="primary"
                         size="sm"
                         disabled={actionLoading}
-                        onClick={() => handleSubmitReview(task._id)}
+                        onClick={() => setSelectedTaskForReview(task)}
                         className="glow-indigo"
                       >
                         <Send className="w-3.5 h-3.5 mr-1" />
-                        Submit for Review
+                        Submit Deliverables
                       </Button>
                     )}
 
@@ -435,6 +521,38 @@ export const WorkflowPage = () => {
           task={selectedTaskForChanges}
           onSubmit={handleConfirmChanges}
           loading={actionLoading}
+        />
+      )}
+
+      {/* Submit Review Modal */}
+      {selectedTaskForReview && (
+        <SubmitReviewModal
+          isOpen={!!selectedTaskForReview}
+          onClose={() => setSelectedTaskForReview(null)}
+          task={selectedTaskForReview}
+          onSubmit={handleSubmitReview}
+          loading={actionLoading}
+        />
+      )}
+
+      {/* Task Details Modal */}
+      {selectedTaskForDetails && (
+        <TaskDetailsModal
+          isOpen={!!selectedTaskForDetails}
+          onClose={() => setSelectedTaskForDetails(null)}
+          task={selectedTaskForDetails}
+          isClient={isClient}
+          isFreelancer={isFreelancer}
+          onApprove={handleApprove}
+          onRequestChanges={(task) => {
+            setSelectedTaskForDetails(null);
+            setSelectedTaskForChanges(task);
+          }}
+          onOpenSubmitReview={(task) => {
+            setSelectedTaskForDetails(null);
+            setSelectedTaskForReview(task);
+          }}
+          actionLoading={actionLoading}
         />
       )}
     </div>

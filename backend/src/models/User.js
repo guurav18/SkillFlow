@@ -61,6 +61,36 @@ const userSchema = new mongoose.Schema(
       trim: true,
       default: '',
     },
+    // Ratings & Public Profile
+    averageRating: {
+      type: Number,
+      default: 5.0,
+      min: 0,
+      max: 5,
+    },
+    totalReviews: {
+      type: Number,
+      default: 0,
+    },
+    githubUrl: {
+      type: String,
+      trim: true,
+      default: '',
+    },
+    linkedinUrl: {
+      type: String,
+      trim: true,
+      default: '',
+    },
+    portfolioUrl: {
+      type: String,
+      trim: true,
+      default: '',
+    },
+    availableForWork: {
+      type: Boolean,
+      default: true,
+    },
     // Email verification fields
     emailVerified: {
       type: Boolean,

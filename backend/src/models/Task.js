@@ -76,6 +76,61 @@ const taskSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    // File Attachments (General task resources / specs / wireframes)
+    attachments: [
+      {
+        name: { type: String, required: true },
+        url: { type: String, required: true },
+        size: { type: Number, default: 0 },
+        mimetype: { type: String, default: '' },
+        uploadedBy: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'User',
+        },
+        uploadedAt: {
+          type: Date,
+          default: Date.now,
+        },
+      },
+    ],
+    // Deliverables submitted when task is sent for review
+    deliverables: {
+      notes: {
+        type: String,
+        trim: true,
+        default: '',
+      },
+      links: [
+        {
+          label: { type: String, trim: true, default: 'Deliverable Link' },
+          url: { type: String, trim: true, required: true },
+        },
+      ],
+      attachments: [
+        {
+          name: { type: String, required: true },
+          url: { type: String, required: true },
+          size: { type: Number, default: 0 },
+          mimetype: { type: String, default: '' },
+          uploadedBy: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+          },
+          uploadedAt: {
+            type: Date,
+            default: Date.now,
+          },
+        },
+      ],
+      submittedAt: {
+        type: Date,
+        default: null,
+      },
+      submittedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+      },
+    },
   },
   {
     timestamps: true,

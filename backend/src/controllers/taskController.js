@@ -66,6 +66,17 @@ const createTask = async (req, res, next) => {
       initialStatus = 'todo';
     }
 
+    const formattedAttachments = Array.isArray(req.body.attachments)
+      ? req.body.attachments.map((att) => ({
+          name: att.name,
+          url: att.url,
+          size: att.size || 0,
+          mimetype: att.mimetype || '',
+          uploadedBy: req.user._id,
+          uploadedAt: new Date(),
+        }))
+      : [];
+
     const task = await Task.create({
       title: title.trim(),
       description: description ? description.trim() : '',
@@ -75,10 +86,12 @@ const createTask = async (req, res, next) => {
       status: initialStatus,
       priority: priority || 'medium',
       dueDate: dueDate ? new Date(dueDate) : null,
+      attachments: formattedAttachments,
     });
 
     await task.populate('assignedTo', 'name email avatar');
     await task.populate('createdBy', 'name email role');
+    await task.populate('attachments.uploadedBy', 'name email');
 
     return res.status(201).json({
       success: true,
@@ -114,6 +127,9 @@ const getProjectTasks = async (req, res, next) => {
       .populate('createdBy', 'name email role')
       .populate('approvedBy', 'name email')
       .populate('reviewedBy', 'name email')
+      .populate('attachments.uploadedBy', 'name email')
+      .populate('deliverables.submittedBy', 'name email')
+      .populate('deliverables.attachments.uploadedBy', 'name email')
       .sort({ createdAt: -1 });
 
     // Calculate Task Metrics
@@ -154,6 +170,9 @@ const getTaskById = async (req, res, next) => {
       .populate('createdBy', 'name email role')
       .populate('approvedBy', 'name email')
       .populate('reviewedBy', 'name email')
+      .populate('attachments.uploadedBy', 'name email')
+      .populate('deliverables.submittedBy', 'name email')
+      .populate('deliverables.attachments.uploadedBy', 'name email')
       .populate('project', 'title status client hiredFreelancer assignedFreelancers');
 
     if (!task) {
@@ -255,6 +274,17 @@ const updateTask = async (req, res, next) => {
       if (priority !== undefined) task.priority = priority;
       if (dueDate !== undefined) task.dueDate = dueDate ? new Date(dueDate) : null;
 
+      if (req.body.attachments !== undefined && Array.isArray(req.body.attachments)) {
+        task.attachments = req.body.attachments.map((att) => ({
+          name: att.name,
+          url: att.url,
+          size: att.size || 0,
+          mimetype: att.mimetype || '',
+          uploadedBy: att.uploadedBy?._id || att.uploadedBy || req.user._id,
+          uploadedAt: att.uploadedAt || new Date(),
+        }));
+      }
+
       if (assignedTo !== undefined && assignedTo !== null) {
         const projFreelancerIds = [
           ...(proj.assignedFreelancers || []),
@@ -278,6 +308,9 @@ const updateTask = async (req, res, next) => {
     await task.populate('createdBy', 'name email role');
     await task.populate('approvedBy', 'name email');
     await task.populate('reviewedBy', 'name email');
+    await task.populate('attachments.uploadedBy', 'name email');
+    await task.populate('deliverables.submittedBy', 'name email');
+    await task.populate('deliverables.attachments.uploadedBy', 'name email');
 
     return res.status(200).json({
       success: true,
@@ -321,9 +354,37 @@ const submitTaskForReview = async (req, res, next) => {
       });
     }
 
+    const { notes, links, attachments } = req.body;
+
     task.status = 'review';
     task.submittedForReviewAt = new Date();
     task.changesRequested = false;
+
+    const deliverableAttachments = Array.isArray(attachments)
+      ? attachments.map((att) => ({
+          name: att.name,
+          url: att.url,
+          size: att.size || 0,
+          mimetype: att.mimetype || '',
+          uploadedBy: req.user._id,
+          uploadedAt: new Date(),
+        }))
+      : (task.deliverables?.attachments || []);
+
+    const deliverableLinks = Array.isArray(links)
+      ? links.filter((l) => l && l.url).map((l) => ({
+          label: (l.label || 'Deliverable Link').trim(),
+          url: l.url.trim(),
+        }))
+      : (task.deliverables?.links || []);
+
+    task.deliverables = {
+      notes: typeof notes === 'string' ? notes.trim() : (task.deliverables?.notes || ''),
+      links: deliverableLinks,
+      attachments: deliverableAttachments,
+      submittedAt: new Date(),
+      submittedBy: req.user._id,
+    };
 
     await task.save();
 
@@ -331,7 +392,7 @@ const submitTaskForReview = async (req, res, next) => {
       recipient: proj.client,
       type: 'task_review',
       title: 'Task awaiting your review',
-      message: `${task.title} was submitted for review.`,
+      message: `${task.title} was submitted for review with deliverables.`,
       project: proj._id,
       task: task._id,
     });
@@ -340,6 +401,9 @@ const submitTaskForReview = async (req, res, next) => {
     await task.populate('createdBy', 'name email role');
     await task.populate('approvedBy', 'name email');
     await task.populate('reviewedBy', 'name email');
+    await task.populate('attachments.uploadedBy', 'name email');
+    await task.populate('deliverables.submittedBy', 'name email');
+    await task.populate('deliverables.attachments.uploadedBy', 'name email');
 
     return res.status(200).json({
       success: true,
@@ -508,6 +572,9 @@ const getGlobalWorkflow = async (req, res, next) => {
       .populate('createdBy', 'name email role')
       .populate('approvedBy', 'name email')
       .populate('reviewedBy', 'name email')
+      .populate('attachments.uploadedBy', 'name email')
+      .populate('deliverables.submittedBy', 'name email')
+      .populate('deliverables.attachments.uploadedBy', 'name email')
       .sort({ updatedAt: -1 });
 
     // Calculate role-specific pending action count for the navigation badge
@@ -527,6 +594,71 @@ const getGlobalWorkflow = async (req, res, next) => {
       pendingActionCount,
       count: tasks.length,
       tasks,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Add attachment to a task
+// @route   POST /api/tasks/:id/attachments
+// @access  Private (Project Members)
+const addTaskAttachment = async (req, res, next) => {
+  try {
+    const { name, url, size, mimetype } = req.body;
+    if (!name || !url) {
+      return res.status(400).json({
+        success: false,
+        message: 'Attachment name and URL are required.',
+      });
+    }
+
+    const task = await Task.findById(req.params.id).populate('project');
+    if (!task) {
+      return res.status(404).json({ success: false, message: 'Task not found.' });
+    }
+
+    task.attachments.push({
+      name,
+      url,
+      size: size || 0,
+      mimetype: mimetype || '',
+      uploadedBy: req.user._id,
+      uploadedAt: new Date(),
+    });
+
+    await task.save();
+    await task.populate('attachments.uploadedBy', 'name email');
+
+    return res.status(200).json({
+      success: true,
+      message: 'Attachment added successfully.',
+      task,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Remove attachment from a task
+// @route   DELETE /api/tasks/:id/attachments/:attachmentId
+// @access  Private (Project Members)
+const removeTaskAttachment = async (req, res, next) => {
+  try {
+    const task = await Task.findById(req.params.id);
+    if (!task) {
+      return res.status(404).json({ success: false, message: 'Task not found.' });
+    }
+
+    task.attachments = task.attachments.filter(
+      (att) => att._id.toString() !== req.params.attachmentId
+    );
+
+    await task.save();
+    return res.status(200).json({
+      success: true,
+      message: 'Attachment removed successfully.',
+      task,
     });
   } catch (error) {
     next(error);
@@ -578,5 +710,7 @@ module.exports = {
   approveTask,
   requestChanges,
   getGlobalWorkflow,
+  addTaskAttachment,
+  removeTaskAttachment,
   deleteTask,
 };

@@ -3,6 +3,7 @@ import { Modal } from '../common/Modal';
 import { Button } from '../common/Button';
 import { Calendar, Tag, AlertCircle, Users, UserCheck, Sparkles } from 'lucide-react';
 import { aiService } from '../../services/aiService';
+import { FileAttachmentUploader } from './FileAttachmentUploader';
 
 const EMPTY_FREELANCERS = [];
 
@@ -24,6 +25,7 @@ export const TaskModal = ({
   const [dueDate, setDueDate] = useState(() =>
     initialTask?.dueDate ? new Date(initialTask.dueDate).toISOString().split('T')[0] : ''
   );
+  const [attachments, setAttachments] = useState(() => initialTask?.attachments || []);
   const [assignedTo, setAssignedTo] = useState(() =>
     initialTask?.assignedTo?._id ||
     initialTask?.assignedTo ||
@@ -76,6 +78,7 @@ export const TaskModal = ({
         priority,
         status,
         dueDate: dueDate || null,
+        attachments,
         ...(isClient && assignedTo ? { assignedTo } : {}),
       });
       onClose();
@@ -223,6 +226,16 @@ export const TaskModal = ({
             className="w-full p-3 bg-slate-950/80 border border-slate-800 rounded-xl text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-indigo-500 resize-none leading-relaxed transition"
           ></textarea>
         </div>
+
+        {/* Task Attachments / Reference Documents */}
+        <FileAttachmentUploader
+          files={attachments}
+          onChange={setAttachments}
+          disabled={loading}
+          label="Specification & Asset Files (Optional)"
+          hint="Attach project briefs, design assets, or technical docs (up to 50MB)"
+          maxFiles={5}
+        />
 
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded-xl bg-indigo-950/20 border border-indigo-500/20">
           <div><p className="text-xs font-semibold text-slate-200">AI effort estimate</p>{estimate ? <p className="text-xs text-indigo-300 mt-1">Estimated {estimate.estimatedHoursMin}-{estimate.estimatedHoursMax} hours · {estimate.complexity} complexity</p> : <p className="text-[11px] text-slate-500 mt-1">Advisory estimate, not a guaranteed deadline.</p>}</div>

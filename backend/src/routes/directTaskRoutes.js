@@ -8,6 +8,8 @@ const {
   approveTask,
   requestChanges,
   getGlobalWorkflow,
+  addTaskAttachment,
+  removeTaskAttachment,
 } = require('../controllers/taskController');
 const { protect } = require('../middleware/authMiddleware');
 
@@ -23,5 +25,9 @@ router.delete('/:id', protect, deleteTask);
 router.post('/:id/submit-review', protect, submitTaskForReview);
 router.post('/:id/approve', protect, approveTask);
 router.post('/:id/request-changes', protect, requestChanges);
+
+// Attachments
+router.post('/:id/attachments', protect, addTaskAttachment);
+router.delete('/:id/attachments/:attachmentId', protect, removeTaskAttachment);
 
 module.exports = router;

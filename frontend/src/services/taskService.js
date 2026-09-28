@@ -21,8 +21,8 @@ export const taskService = {
     return response.data;
   },
 
-  async submitForReview(taskId) {
-    const response = await api.post(`/tasks/${taskId}/submit-review`);
+  async submitForReview(taskId, submissionData = {}) {
+    const response = await api.post(`/tasks/${taskId}/submit-review`, submissionData);
     return response.data;
   },
 
@@ -33,6 +33,40 @@ export const taskService = {
 
   async requestChanges(taskId, reviewComment) {
     const response = await api.post(`/tasks/${taskId}/request-changes`, { reviewComment });
+    return response.data;
+  },
+
+  async uploadFile(file) {
+    const formData = new FormData();
+    formData.append('file', file);
+    const response = await api.post('/upload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  },
+
+  async uploadMultipleFiles(files) {
+    const formData = new FormData();
+    Array.from(files).forEach((file) => {
+      formData.append('files', file);
+    });
+    const response = await api.post('/upload/multiple', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  },
+
+  async addAttachment(taskId, attachmentData) {
+    const response = await api.post(`/tasks/${taskId}/attachments`, attachmentData);
+    return response.data;
+  },
+
+  async removeAttachment(taskId, attachmentId) {
+    const response = await api.delete(`/tasks/${taskId}/attachments/${attachmentId}`);
     return response.data;
   },
 
@@ -50,5 +84,16 @@ export const taskService = {
   async deleteTask(taskId) {
     const response = await api.delete(`/tasks/${taskId}`);
     return response.data;
+  },
+
+  getFileUrl(path) {
+    if (!path) return '';
+    if (path.startsWith('http://') || path.startsWith('https://')) return path;
+    const apiUrl = import.meta.env.VITE_API_URL || '';
+    if (apiUrl) {
+      const baseUrl = apiUrl.replace(/\/api\/?$/, '');
+      return `${baseUrl}${path.startsWith('/') ? '' : '/'}${path}`;
+    }
+    return path;
   },
 };

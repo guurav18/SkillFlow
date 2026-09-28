@@ -81,10 +81,10 @@ export const Navbar = () => {
 
             {!isAuthenticated && (
               <nav className="hidden items-center gap-1 text-sm font-medium lg:flex">
-                <Link to="/freelancer/browse" className="rounded-lg px-3 py-2 text-slate-600 transition hover:bg-slate-100 hover:text-slate-950">Find Talent</Link>
-                <Link to="/freelancer/browse" className="rounded-lg px-3 py-2 text-slate-600 transition hover:bg-slate-100 hover:text-slate-950">Find Work</Link>
-                <a href="/#how-it-works" className="rounded-lg px-3 py-2 text-slate-600 transition hover:bg-slate-100 hover:text-slate-950">How It Works</a>
-                <a href="/#explore" className="rounded-lg px-3 py-2 text-slate-600 transition hover:bg-slate-100 hover:text-slate-950">Explore</a>
+                <Link to="/freelancers" className="rounded-lg px-3 py-2 text-slate-600 dark:text-slate-300 transition hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-950 dark:hover:text-white">Find Talent</Link>
+                <Link to="/freelancer/browse" className="rounded-lg px-3 py-2 text-slate-600 dark:text-slate-300 transition hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-950 dark:hover:text-white">Find Work</Link>
+                <a href="/#how-it-works" className="rounded-lg px-3 py-2 text-slate-600 dark:text-slate-300 transition hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-950 dark:hover:text-white">How It Works</a>
+                <a href="/#explore" className="rounded-lg px-3 py-2 text-slate-600 dark:text-slate-300 transition hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-950 dark:hover:text-white">Explore</a>
               </nav>
             )}
             {isAuthenticated && (
@@ -100,6 +100,16 @@ export const Navbar = () => {
                       }`}
                     >
                       Dashboard
+                    </Link>
+                    <Link
+                      to="/freelancers"
+                      className={`px-3 py-1.5 rounded-lg text-xs sm:text-sm transition ${
+                        isActive('/freelancers')
+                          ? 'bg-[#eef2ff] text-[#3157d5] dark:bg-indigo-500/15 dark:text-indigo-300 font-semibold border border-indigo-100 dark:border-indigo-500/20'
+                          : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100/70 dark:hover:bg-slate-800/60'
+                      }`}
+                    >
+                      Find Talent
                     </Link>
                     <Link
                       to="/client/projects"

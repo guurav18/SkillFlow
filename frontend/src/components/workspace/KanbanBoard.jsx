@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Badge } from '../common/Badge';
 import { Button } from '../common/Button';
 import { RequestChangesModal } from './RequestChangesModal';
+import { SubmitReviewModal } from './SubmitReviewModal';
+import { TaskDetailsModal } from './TaskDetailsModal';
 import { formatDate, formatRelativeTime } from '../../utils/formatters';
 import {
   PlusCircle,
@@ -18,6 +20,9 @@ import {
   RotateCcw,
   AlertTriangle,
   MessageSquareQuote,
+  Paperclip,
+  FileCheck2,
+  Eye,
 } from 'lucide-react';
 
 const COLUMNS = [
@@ -40,6 +45,8 @@ export const KanbanBoard = ({
   isFreelancer,
 }) => {
   const [selectedTaskForChanges, setSelectedTaskForChanges] = useState(null);
+  const [selectedTaskForReview, setSelectedTaskForReview] = useState(null);
+  const [selectedTaskForDetails, setSelectedTaskForDetails] = useState(null);
   const [actionLoading, setActionLoading] = useState(false);
 
   const getTasksByStatus = (status) => tasks.filter((t) => t.status === status);
@@ -61,10 +68,11 @@ export const KanbanBoard = ({
     }
   };
 
-  const handleSubmitReview = async (taskId) => {
+  const handleSubmitReview = async (taskId, submissionData = {}) => {
     setActionLoading(true);
     try {
-      await onSubmitForReview(taskId);
+      await onSubmitForReview(taskId, submissionData);
+      setSelectedTaskForReview(null);
     } catch (err) {
       alert(err.message || 'Failed to submit task for review.');
     } finally {
@@ -169,21 +177,63 @@ export const KanbanBoard = ({
                         </div>
                       </div>
 
-                      {/* Title */}
-                      <h4 className="font-bold text-xs sm:text-sm text-slate-100 mb-1.5 leading-snug">
-                        {task.title}
-                      </h4>
+                      {/* Title & Click to View */}
+                      <div
+                        onClick={() => setSelectedTaskForDetails(task)}
+                        className="cursor-pointer group/title"
+                      >
+                        <h4 className="font-bold text-xs sm:text-sm text-slate-100 mb-1.5 leading-snug group-hover/title:text-indigo-400 transition">
+                          {task.title}
+                        </h4>
 
-                      {/* Description if any */}
-                      {task.description && (
-                        <p className="text-xs text-slate-400 line-clamp-2 mb-3 leading-relaxed">
-                          {task.description}
-                        </p>
+                        {/* Description if any */}
+                        {task.description && (
+                          <p className="text-xs text-slate-400 line-clamp-2 mb-2 leading-relaxed">
+                            {task.description}
+                          </p>
+                        )}
+                      </div>
+
+                      {/* Attachments & Deliverables Indicators */}
+                      {((task.attachments && task.attachments.length > 0) ||
+                        (task.deliverables &&
+                          (task.deliverables.notes ||
+                            task.deliverables.links?.length > 0 ||
+                            task.deliverables.attachments?.length > 0))) && (
+                        <div
+                          onClick={() => setSelectedTaskForDetails(task)}
+                          className="flex items-center gap-1.5 mb-2.5 flex-wrap cursor-pointer"
+                        >
+                          {task.attachments && task.attachments.length > 0 && (
+                            <span
+                              className="inline-flex items-center gap-1 text-[10px] text-slate-400 bg-slate-800/80 px-1.5 py-0.5 rounded border border-slate-700/60 hover:border-slate-600 transition"
+                              title={`${task.attachments.length} specification file(s)`}
+                            >
+                              <Paperclip className="w-2.5 h-2.5 text-indigo-400" />
+                              <span>{task.attachments.length}</span>
+                            </span>
+                          )}
+                          {task.deliverables &&
+                            (task.deliverables.notes ||
+                              task.deliverables.links?.length > 0 ||
+                              task.deliverables.attachments?.length > 0) && (
+                              <span
+                                className="inline-flex items-center gap-1 text-[10px] text-indigo-300 bg-indigo-500/10 px-1.5 py-0.5 rounded border border-indigo-500/30 hover:bg-indigo-500/20 transition"
+                                title="Click to view submitted deliverables"
+                              >
+                                <FileCheck2 className="w-2.5 h-2.5 text-indigo-400" />
+                                <span>Deliverables</span>
+                              </span>
+                            )}
+                        </div>
                       )}
 
                       {/* Changes Requested Banner (if in_progress with feedback) */}
                       {col.id === 'in_progress' && task.changesRequested && (
-                        <div className="p-2.5 rounded-lg bg-amber-500/10 border border-amber-500/30 text-xs text-amber-300 mb-3 space-y-1">
+                        <div
+                          onClick={() => setSelectedTaskForDetails(task)}
+                          className="p-2.5 rounded-lg bg-amber-500/10 border border-amber-500/30 text-xs text-amber-300 mb-3 space-y-1 cursor-pointer hover:bg-amber-500/20 transition"
+                        >
                           <div className="flex items-center gap-1 font-bold text-[11px] text-amber-400">
                             <AlertTriangle className="w-3.5 h-3.5" /> Changes Requested
                           </div>
@@ -197,7 +247,10 @@ export const KanbanBoard = ({
 
                       {/* Review State Banner */}
                       {col.id === 'review' && (
-                        <div className="p-2 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-xs text-indigo-300 mb-3 flex items-center justify-between">
+                        <div
+                          onClick={() => setSelectedTaskForDetails(task)}
+                          className="p-2 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-xs text-indigo-300 mb-3 flex items-center justify-between cursor-pointer hover:bg-indigo-500/20 transition"
+                        >
                           <span className="flex items-center gap-1 font-semibold text-[11px]">
                             <Clock className="w-3 h-3 text-indigo-400" />
                             {isClient ? 'Review Required' : 'Awaiting Client Review'}
@@ -207,7 +260,10 @@ export const KanbanBoard = ({
 
                       {/* Done State Banner */}
                       {col.id === 'done' && (
-                        <div className="p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-300 mb-3 flex items-center justify-between">
+                        <div
+                          onClick={() => setSelectedTaskForDetails(task)}
+                          className="p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-300 mb-3 flex items-center justify-between cursor-pointer hover:bg-emerald-500/20 transition"
+                        >
                           <span className="flex items-center gap-1 font-semibold text-[11px]">
                             <CheckCircle2 className="w-3 h-3 text-emerald-400" />
                             Approved & Done
@@ -257,48 +313,63 @@ export const KanbanBoard = ({
                               <ArrowLeft className="w-3 h-3" />
                             </button>
                             <button
-                              onClick={() => handleSubmitReview(task._id)}
+                              onClick={() => setSelectedTaskForReview(task)}
                               disabled={actionLoading}
                               className="flex-1 py-1.5 px-3 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-sm transition flex items-center justify-center gap-1.5"
                             >
                               <Send className="w-3 h-3" />
-                              Submit for Review
+                              Submit Deliverables
                             </button>
                           </div>
                         )}
 
                         {/* 3. Review Column: Client Approve / Request Changes, or Freelancer Status */}
                         {col.id === 'review' && (
-                          isClient ? (
-                            <div className="grid grid-cols-2 gap-1.5">
-                              <button
-                                onClick={() => setSelectedTaskForChanges(task)}
-                                disabled={actionLoading}
-                                className="py-1.5 px-2 rounded-lg bg-amber-600/20 hover:bg-amber-600/30 border border-amber-500/30 text-amber-300 text-[11px] font-semibold transition flex items-center justify-center gap-1"
-                              >
-                                <RotateCcw className="w-3 h-3" />
-                                Changes
-                              </button>
-                              <button
-                                onClick={() => handleApprove(task._id)}
-                                disabled={actionLoading}
-                                className="py-1.5 px-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold shadow-sm transition flex items-center justify-center gap-1"
-                              >
-                                <CheckCheck className="w-3.5 h-3.5" />
-                                Approve
-                              </button>
-                            </div>
-                          ) : (
-                            <div className="text-center py-1 text-[11px] text-slate-400 italic">
-                              Pending client approval
-                            </div>
-                          )
+                          <div className="space-y-1.5">
+                            {/* View deliverables button for both client & freelancer */}
+                            <button
+                              onClick={() => setSelectedTaskForDetails(task)}
+                              className="w-full py-1 px-2 rounded-lg bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 text-[11px] font-semibold transition flex items-center justify-center gap-1"
+                            >
+                              <Eye className="w-3 h-3" /> View Deliverables
+                            </button>
+
+                            {isClient ? (
+                              <div className="grid grid-cols-2 gap-1.5">
+                                <button
+                                  onClick={() => setSelectedTaskForChanges(task)}
+                                  disabled={actionLoading}
+                                  className="py-1.5 px-2 rounded-lg bg-amber-600/20 hover:bg-amber-600/30 border border-amber-500/30 text-amber-300 text-[11px] font-semibold transition flex items-center justify-center gap-1"
+                                >
+                                  <RotateCcw className="w-3 h-3" />
+                                  Changes
+                                </button>
+                                <button
+                                  onClick={() => handleApprove(task._id)}
+                                  disabled={actionLoading}
+                                  className="py-1.5 px-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold shadow-sm transition flex items-center justify-center gap-1"
+                                >
+                                  <CheckCheck className="w-3.5 h-3.5" />
+                                  Approve
+                                </button>
+                              </div>
+                            ) : (
+                              <div className="text-center py-1 text-[11px] text-slate-400 italic">
+                                Pending client approval
+                              </div>
+                            )}
+                          </div>
                         )}
 
                         {/* 4. Done Column */}
                         {col.id === 'done' && (
                           <div className="flex items-center justify-between text-[10px] text-slate-500 pt-1">
-                            <span>Completed</span>
+                            <button
+                              onClick={() => setSelectedTaskForDetails(task)}
+                              className="text-slate-400 hover:text-indigo-400 flex items-center gap-1 transition"
+                            >
+                              <Eye className="w-3 h-3" /> Details
+                            </button>
                             {task.approvedAt && <span>{formatRelativeTime(task.approvedAt)}</span>}
                           </div>
                         )}
@@ -320,6 +391,42 @@ export const KanbanBoard = ({
           task={selectedTaskForChanges}
           onSubmit={handleConfirmChanges}
           loading={actionLoading}
+        />
+      )}
+
+      {/* Submit Deliverables Modal */}
+      {selectedTaskForReview && (
+        <SubmitReviewModal
+          isOpen={!!selectedTaskForReview}
+          onClose={() => setSelectedTaskForReview(null)}
+          task={selectedTaskForReview}
+          onSubmit={handleSubmitReview}
+          loading={actionLoading}
+        />
+      )}
+
+      {/* View Task Details & Deliverables Modal */}
+      {selectedTaskForDetails && (
+        <TaskDetailsModal
+          isOpen={!!selectedTaskForDetails}
+          onClose={() => setSelectedTaskForDetails(null)}
+          task={selectedTaskForDetails}
+          isClient={isClient}
+          isFreelancer={isFreelancer}
+          onApprove={handleApprove}
+          onRequestChanges={(task) => {
+            setSelectedTaskForDetails(null);
+            setSelectedTaskForChanges(task);
+          }}
+          onOpenSubmitReview={(task) => {
+            setSelectedTaskForDetails(null);
+            setSelectedTaskForReview(task);
+          }}
+          onEditTask={(task) => {
+            setSelectedTaskForDetails(null);
+            onEditTask(task);
+          }}
+          actionLoading={actionLoading}
         />
       )}
     </div>
