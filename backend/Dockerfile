@@ -20,6 +20,9 @@ RUN npm ci --omit=dev --ignore-scripts && npm cache clean --force
 # Copy application source
 COPY src ./src
 
+# Create uploads directory and set ownership for non-privileged user
+RUN mkdir -p uploads && chown -R node:node /usr/src/app
+
 # Create non-privileged system user for security
 USER node
 
